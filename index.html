@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Бесплатный VPN — Silence 🥷🏻</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --card: #1e1713;
+    --card-2: #2a2019;
+    --border: #43332a;
+    --light-brown: #e6c49a;
+    --brown: #b88f63;
+    --brown-deep: #8a6844;
+    --white: #ffffff;
+    --text: #f7efe6;
+    --muted: #c4b0a0;
+    --green: #3ddc84;
+    --green-glow: rgba(61,220,132,.6);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background:
+      radial-gradient(circle at 50% -10%, #33241a 0%, transparent 55%),
+      radial-gradient(circle at 10% 100%, #261a13 0%, transparent 50%),
+      radial-gradient(circle at 90% 60%, #1f1611 0%, transparent 60%),
+      linear-gradient(180deg, #0f0c0a 0%, #16110e 100%);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    min-height: 100vh;
+    padding: 22px 16px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 60px;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  .ico {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    vertical-align: middle;
+  }
+  .ico-lg { width: 18px; height: 18px; stroke-width: 1.9; }
+
+  /* ===== ВЕРХНЯЯ ПАНЕЛЬ ===== */
+  .top-bar {
+    width: 100%;
+    max-width: 480px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 8px 12px;
+    font-size: 13.5px;
+    color: var(--muted);
+  }
+  .top-bar .brand {
+    font-weight: 700;
+    color: var(--light-brown);
+    text-shadow: 0 0 18px rgba(230,196,154,.5);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .top-bar a {
+    color: var(--light-brown);
+    text-decoration: none;
+    font-weight: 600;
+    transition: .25s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 13px;
+  }
+  .top-bar a:hover { color: var(--white); text-shadow: 0 0 16px rgba(230,196,154,.9); }
+
+  /* ===== РАМКА ===== */
+  .card {
+    width: 100%;
+    max-width: 480px;
+    background: linear-gradient(160deg, var(--card) 0%, var(--card-2) 100%);
+    border: 1px solid var(--border);
+    border-radius: 26px;
+    padding: 26px 24px;
+    position: relative;
+    box-shadow:
+      0 24px 70px rgba(0,0,0,.6),
+      0 0 0 1px rgba(230,196,154,.04),
+      inset 0 1px 0 rgba(230,196,154,.1);
+    overflow: hidden;
+  }
+  .card::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 10%; right: 10%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(230,196,154,.75), transparent);
+  }
+  .card::after {
+    content: "";
+    position: absolute;
+    bottom: -60%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%; height: 60%;
+    background: radial-gradient(ellipse, rgba(230,196,154,.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .corner {
+    position: absolute;
+    top: 18px; right: 18px;
+    font-size: 10.5px;
+    color: var(--light-brown);
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+    border: 1px solid var(--brown-deep);
+    padding: 5px 12px;
+    border-radius: 20px;
+    background: rgba(184,143,99,.14);
+    backdrop-filter: blur(6px);
+    font-weight: 700;
+    box-shadow: 0 0 16px rgba(230,196,154,.14);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* ===== РАМКА 1 ===== */
+  .card-1 { text-align: center; padding-top: 42px; }
+
+  .corner-link {
+    position: absolute;
+    top: 18px; left: 18px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--light-brown);
+    text-decoration: none;
+    border: 1px solid var(--brown-deep);
+    padding: 7px 14px;
+    border-radius: 20px;
+    background: rgba(184,143,99,.14);
+    transition: .3s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .corner-link:hover {
+    background: rgba(184,143,99,.32);
+    color: var(--white);
+    box-shadow: 0 0 22px rgba(230,196,154,.55);
+  }
+
+  /* ===== Аватар + бейдж справа ===== */
+  .avatar-stage {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 46px 0 18px;
+    animation: float 3.6s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+
+  /* Бейдж Silence — светло-коричневый */
+  .badge-right {
+    position: absolute;
+    left: calc(50% + 90px);
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(20,15,12,.9);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--light-brown);
+    border-radius: 22px;
+    padding: 9px 15px 9px 11px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    white-space: nowrap;
+    box-shadow: 0 6px 24px rgba(0,0,0,.6), 0 0 22px rgba(230,196,154,.4);
+  }
+  .badge-right .ico { color: var(--light-brown); filter: drop-shadow(0 0 6px rgba(230,196,154,.8)); }
+
+  /* Точка статуса — светло-коричневая */
+  .status-dot {
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: var(--light-brown);
+    box-shadow: 0 0 10px var(--light-brown), 0 0 22px rgba(230,196,154,.6);
+    animation: pulse 1.8s infinite;
+    flex-shrink: 0;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50% { opacity: .55; transform: scale(.8); }
+  }
+
+  .avatar-outer {
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    border: 2px solid var(--light-brown);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle, rgba(230,196,154,.16) 0%, transparent 70%);
+    box-shadow:
+      0 0 60px rgba(230,196,154,.35),
+      inset 0 0 40px rgba(230,196,154,.1);
+    flex-shrink: 0;
+  }
+
+  .avatar-inner {
+    width: 176px; height: 176px;
+    border-radius: 50%;
+    background: #2a211a url('Silence.jpg') center/cover no-repeat;
+    position: relative;
+    border: 2px solid var(--brown);
+    box-shadow: 0 0 30px rgba(0,0,0,.6), inset 0 0 24px rgba(0,0,0,.4);
+  }
+
+  /* Онлайн-бейдж — светло-коричневый */
+  .online-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 10px auto 0;
+    padding: 9px 18px;
+    border-radius: 22px;
+    background: rgba(230,196,154,.1);
+    border: 1px solid rgba(230,196,154,.45);
+    font-size: 13px;
+    color: #f0dfc4;
+    font-weight: 600;
+    box-shadow: 0 0 24px rgba(230,196,154,.22);
+  }
+  .online-badge .ico { color: var(--light-brown); filter: drop-shadow(0 0 6px rgba(230,196,154,.8)); }
+
+  .card-1 h2 {
+    margin: 26px 0 8px;
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: .3px;
+    background: linear-gradient(180deg, #fff 0%, var(--light-brown) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 22px rgba(230,196,154,.3));
+  }
+
+  .tagline {
+    font-weight: 800;
+    font-size: 15.5px;
+    color: var(--light-brown);
+    margin-bottom: 10px;
+    text-shadow: 0 0 18px rgba(230,196,154,.4);
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .tagline .ico { color: var(--light-brown); filter: drop-shadow(0 0 8px rgba(230,196,154,.9)); }
+
+  .card-1 .desc {
+    font-size: 13.5px;
+    color: var(--muted);
+    line-height: 1.65;
+    margin-bottom: 24px;
+  }
+
+  /* ===== КНОПКИ ===== */
+  .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    width: 100%;
+    padding: 15px;
+    border-radius: 15px;
+    font-size: 15px;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: .3s;
+    font-family: inherit;
+    letter-spacing: .3px;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn .ico { width: 17px; height: 17px; stroke-width: 2.1; }
+
+  .btn-primary::after {
+    content: "";
+    position: absolute;
+    top: 0; left: -120%;
+    width: 60%; height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,.65), transparent);
+    transform: skewX(-20deg);
+    animation: shine 3.2s infinite;
+  }
+  @keyframes shine {
+    0%   { left: -120%; }
+    45%  { left: 130%; }
+    100% { left: 130%; }
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--light-brown) 0%, var(--brown) 55%, var(--brown-deep) 100%);
+    color: #1a1208;
+    box-shadow:
+      0 10px 30px rgba(184,143,99,.45),
+      inset 0 1px 0 rgba(255,255,255,.5),
+      0 0 0 1px rgba(255,255,255,.1);
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 16px 40px rgba(230,196,154,.6),
+      inset 0 1px 0 rgba(255,255,255,.6);
+  }
+  .btn-primary:active { transform: translateY(0); }
+
+  .btn-ghost {
+    background: transparent;
+    border: 1.5px solid var(--brown);
+    color: var(--light-brown);
+    margin-top: 12px;
+  }
+  .btn-ghost:hover {
+    background: rgba(184,143,99,.2);
+    color: var(--white);
+    box-shadow: 0 0 26px rgba(230,196,154,.4);
+    border-color: var(--light-brown);
+  }
+
+  /* ===== РАМКА 2 ===== */
+  .card-2 .corner { position: static; display: inline-flex; margin-bottom: 16px; }
+
+  .card-2 h2 {
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1.28;
+    margin-bottom: 10px;
+  }
+  .card-2 h2 span {
+    background: linear-gradient(135deg, var(--light-brown), var(--brown));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 14px rgba(230,196,154,.3));
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    vertical-align: middle;
+  }
+  .card-2 h2 span .ico {
+    color: var(--light-brown);
+    filter: drop-shadow(0 0 10px rgba(230,196,154,.7));
+    -webkit-text-fill-color: initial;
+  }
+
+  .card-2 p {
+    font-size: 13.5px;
+    color: var(--muted);
+    line-height: 1.65;
+    margin-bottom: 22px;
+  }
+
+  .mini-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .mini {
+    background: linear-gradient(160deg, rgba(230,196,154,.07), rgba(184,143,99,.02));
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 18px 16px;
+    transition: .3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .mini::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(230,196,154,.5), transparent);
+  }
+  .mini:hover {
+    border-color: var(--brown);
+    box-shadow: 0 0 28px rgba(230,196,154,.25);
+    transform: translateY(-2px);
+  }
+  .mini .icon {
+    width: 40px; height: 40px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--light-brown);
+    filter: drop-shadow(0 0 14px rgba(230,196,154,.7));
+  }
+  .mini .icon svg {
+    width: 100%; height: 100%;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .mini h3 {
+    font-size: 14.5px;
+    margin-bottom: 6px;
+    color: var(--white);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .mini h3 .ico { color: var(--light-brown); }
+  .mini p { font-size: 12px; color: var(--muted); line-height: 1.55; margin: 0; }
+
+  /* ===== РАМКА 3 ===== */
+  .card-3 .label {
+    font-size: 11px;
+    letter-spacing: 2.5px;
+    color: var(--light-brown);
+    text-transform: uppercase;
+    font-weight: 700;
+    text-shadow: 0 0 14px rgba(230,196,154,.4);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .card-3 .label .ico { color: var(--light-brown); filter: drop-shadow(0 0 6px rgba(230,196,154,.8)); }
+  .card-3 h2 {
+    font-size: 23px;
+    font-weight: 800;
+    margin: 10px 0 10px;
+  }
+  /* Галочка в тексте — светло-коричневая */
+  .card-3 p {
+    font-size: 13.5px;
+    color: var(--muted);
+    line-height: 1.65;
+    margin-bottom: 22px;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .card-3 p .ico {
+    color: var(--light-brown);
+    margin-top: 3px;
+    flex-shrink: 0;
+    filter: drop-shadow(0 0 6px rgba(230,196,154,.8));
+  }
+
+  /* ===== РАМКА 4 ===== */
+  .card-4 { text-align: center; }
+  .card-4 h2 {
+    font-size: 21px;
+    margin-bottom: 10px;
+    font-weight: 800;
+    background: linear-gradient(180deg, #fff 0%, var(--light-brown) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 18px rgba(230,196,154,.3));
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+  }
+  .card-4 h2 .ico {
+    color: var(--light-brown);
+    filter: drop-shadow(0 0 10px rgba(230,196,154,.7));
+    -webkit-text-fill-color: initial;
+  }
+  .card-4 p {
+    font-size: 13.5px;
+    color: var(--muted);
+    line-height: 1.65;
+    margin-bottom: 20px;
+  }
+  .card-4 p .ico {
+    color: var(--light-brown);
+    display: inline-block;
+    vertical-align: -2px;
+    margin: 0 2px;
+  }
+
+  /* ===== ФУТЕР ===== */
+  footer {
+    width: 100%;
+    max-width: 480px;
+    padding: 10px 6px 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .footer-avatar {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: #2a211a url('Silence.jpg') center/cover no-repeat;
+    border: 1.5px solid var(--brown);
+    box-shadow: 0 0 20px rgba(230,196,154,.35);
+  }
+  .footer-brand span {
+    font-size: 13px;
+    color: var(--muted);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .footer-brand span .ico-heart {
+    color: #e57373;
+    filter: drop-shadow(0 0 8px rgba(229,115,115,.8));
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 26px;
+    font-size: 13.5px;
+  }
+  .footer-links a {
+    color: var(--light-brown);
+    text-decoration: none;
+    font-weight: 600;
+    transition: .25s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .footer-links a .ico { color: currentColor; }
+  .footer-links a:hover {
+    color: var(--white);
+    text-shadow: 0 0 18px rgba(230,196,154,.9);
+  }
+
+  .footer-copy {
+    font-size: 11px;
+    color: #6b573f;
+    margin-top: 4px;
+    letter-spacing: .5px;
+  }
+
+  @media (max-width: 420px) {
+    body { gap: 44px; padding: 18px 12px 30px; }
+    .card { padding: 22px 18px; }
+    .avatar-outer { width: 190px; height: 190px; }
+    .avatar-inner { width: 152px; height: 152px; }
+    .badge-right { left: calc(50% + 78px); font-size: 12px; padding: 8px 12px 8px 9px; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- Верхняя панель -->
+  <div class="top-bar">
+    <span class="brand">
+      <svg class="ico" viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      Бесплатный впн — silence
+    </span>
+    <a href="https://t.me/FREEVPN444" target="_blank" rel="noopener">
+      вступить канал
+      <svg class="ico" viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg>
+    </a>
+  </div>
+
+  <!-- ===== РАМКА 1 ===== -->
+  <section class="card card-1">
+    <a class="corner-link" href="#subscription">
+      Получить подписку
+      <svg class="ico" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+
+    <div class="avatar-stage">
+      <div class="avatar-outer">
+        <div class="avatar-inner"></div>
+      </div>
+
+      <div class="badge-right">
+        <span class="status-dot"></span>
+        <svg class="ico" viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        Silence
+      </div>
+    </div>
+
+    <div class="online-badge">
+      <span class="status-dot"></span>
+      <svg class="ico" viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      Онлайн • подписка обновляется каждый день
+    </div>
+
+    <h2>Silence VPN</h2>
+
+    <p class="tagline">
+      <svg class="ico" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      Обходит любые блокировки
+    </p>
+
+    <p class="desc">
+      VPN, MTProto, Web Proxy и VLESS в одном месте. Бесплатно,
+      без лимита устройств, с кучей серверов — просто забери ссылку
+      и подключись.
+    </p>
+
+    <a class="btn btn-primary" href="#subscription">
+      <svg class="ico" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>
+      Получить подписку
+    </a>
+    <a class="btn btn-ghost" href="https://t.me/FREEVPN444" target="_blank" rel="noopener">
+      <svg class="ico" viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg>
+      Следить за новостями
+    </a>
+  </section>
+
+  <!-- ===== РАМКА 2 ===== -->
+  <section class="card card-2">
+    <span class="corner">
+      <svg class="ico" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg>
+      Внутри подписки
+    </span>
+    <h2>Одна подписка —<br><span>
+      все протоколы
+      <svg class="ico ico-lg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+    </span></h2>
+    <p>
+      Никаких лишних настроек. Подписка подключается в любом клиенте
+      и сразу даёт доступ.
+    </p>
+
+    <div class="mini-grid">
+      <div class="mini">
+        <div class="icon">
+          <svg viewBox="0 0 24 24"><path d="M18.178 8c5.096 0 5.096 8 0 8-5.095 0-7.133-8-12.739-8-4.585 0-4.585 8 0 8 5.606 0 7.644-8 12.74-8z"/></svg>
+        </div>
+        <h3>
+          <svg class="ico" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>
+          Устройства
+        </h3>
+        <p>Без лимита на количество подключённых устройств.</p>
+      </div>
+      <div class="mini">
+        <div class="icon">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h3>
+          <svg class="ico" viewBox="0 0 24 24"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>
+          Обход блокировок
+        </h3>
+        <p>Стабильная работа даже при усиленной фильтрации трафика.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== РАМКА 3 ===== -->
+  <section class="card card-3" id="subscription">
+    <div class="label">
+      <svg class="ico" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      Подписка
+    </div>
+    <h2>Забери ссылку за один клик</h2>
+    <p>
+      <svg class="ico" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
+      Нажми на кнопку ниже — ссылка на подписку скопируется в буфер
+      обмена, вставь её в свой клиент.
+    </p>
+
+    <button class="btn btn-primary" id="copyBtn" data-url="https://pozor.bond/sub/14a7eabg7e4i">
+      <svg class="ico" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      Скопировать подписку
+    </button>
+  </section>
+
+  <!-- ===== РАМКА 4 ===== -->
+  <section class="card card-4">
+    <h2>
+      <svg class="ico ico-lg" viewBox="0 0 24 24"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
+      Следи за новостями
+    </h2>
+    <p>
+      Все обновления, новые точки входа и уведомления об изменениях
+      подписок — в нашем Telegram-канале
+      <svg class="ico" viewBox="0 0 24 24" style="width:16px;height:16px;"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg>
+    </p>
+    <a class="btn btn-primary" href="https://t.me/FREEVPN444" target="_blank" rel="noopener">
+      <svg class="ico" viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg>
+      Следить за новостями
+    </a>
+  </section>
+
+  <!-- ===== ФУТЕР ===== -->
+  <footer>
+    <div class="footer-brand">
+      <div class="footer-avatar"></div>
+      <span>
+        Silence — Мы благодарны вам наши подписчики
+        <svg class="ico ico-heart" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </span>
+    </div>
+    <div class="footer-links">
+      <a href="https://t.me/FREEVPN444" target="_blank" rel="noopener">
+        <svg class="ico" viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg>
+        Telegram
+      </a>
+      <a href="#subscription">
+        <svg class="ico" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg>
+        Подписка
+      </a>
+    </div>
+    <div class="footer-copy">© Silence VPN · 2025</div>
+  </footer>
+
+  <script>
+    const copyBtn = document.getElementById('copyBtn');
+    const url     = copyBtn.dataset.url;
+
+    async function copySub() {
+      try {
+        await navigator.clipboard.writeText(url);
+      } catch (e) {
+        const ta = document.createElement('textarea');
+        ta.value = url;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        ta.remove();
+      }
+      copyBtn.innerHTML = '<svg class="ico" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg> Скопировано';
+      copyBtn.style.filter = 'brightness(1.2)';
+      setTimeout(() => {
+        copyBtn.innerHTML = '<svg class="ico" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Скопировать подписку';
+        copyBtn.style.filter = '';
+      }, 2000);
+    }
+
+    copyBtn.addEventListener('click', copySub);
+  </script>
+
+</body>
+</html>
